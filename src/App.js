@@ -8,7 +8,7 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
-  const [statusMessage, setStatusMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
@@ -34,6 +34,21 @@ const App = () => {
     }
   }, [])
 
+  const errorPopup = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
+
+  const notificationPopup = (message) => {
+    console.log(`message popup: ${message}`)
+    setNotificationMessage(message)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
    
@@ -48,11 +63,9 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      notificationPopup('log in successful')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      errorPopup('wrong username or password')
     }
   }
 
@@ -63,14 +76,12 @@ const App = () => {
       const newBlog = await blogService.create({
         title, author, url
       })
+      notificationPopup(`${title} by ${author} added`)
       setTitle('')
       setAuthor('')
       setUrl('')
     } catch (exception) {
-      setErrorMessage(exception.getMessage())
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      errorPopup(exception.getMessage())
     }
   }
 
@@ -78,10 +89,14 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
     blogService.setToken(user.token)
+    notificationPopup('logged out')
   }
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
+      <h1>log in to application</h1>
+      <Notification message={errorMessage} isError={true} />
+      <Notification message={notificationMessage} isError={false} />
       <div>
         username
           <input
@@ -133,13 +148,12 @@ const App = () => {
 
   return (
     <div>
-      <h1>Blogs</h1>
-      <Notification message={errorMessage} />
-      <Notification message={statusMessage} />
-
       {user === null ?
         loginForm() :
         <div>
+          <h1>Blogs</h1>
+          <Notification message={errorMessage} isError={true} />
+          <Notification message={notificationMessage} isError={false} />
           <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>
           <h1>Create New</h1>
           {blogForm()}
