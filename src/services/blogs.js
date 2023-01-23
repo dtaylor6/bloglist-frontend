@@ -31,7 +31,7 @@ const remove = (id) => {
     headers: { Authorization: token },
   }
 
-  return axios.delete(`${baseUrl}/${id}`, config);
+  return axios.delete(`${baseUrl}/${id}`, config)
 }
 
-export default { getAll, create, update, remove, setToken}
+export default { getAll, create, update, remove, setToken }

@@ -14,7 +14,7 @@ const Notification = ({ message, isError }) => {
   }
 
   if (isError) {
-    footerStyle.color = 'red';
+    footerStyle.color = 'red'
   }
 
   return (
@@ -23,5 +23,5 @@ const Notification = ({ message, isError }) => {
     </div>
   )
 }
-  
+
 export default Notification

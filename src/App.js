@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 
 import Blog from './components/Blog'
 import Notification from './components/Notification'
-import Footer from './components/Footer'
 import Togglable from './components/Toggleable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -15,14 +14,14 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
 
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -51,7 +50,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-   
+
     try {
       const user = await loginService.login({
         username, password,
@@ -59,7 +58,7 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-      blogService.setToken(user.token) 
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -80,8 +79,8 @@ const App = () => {
 
   const likeBlog = (id) => {
     const blog = blogs.find(b => b.id === id)
-    const changedBlog = {...blog, likes: blog.likes+1}
-    
+    const changedBlog = { ...blog, likes: blog.likes+1 }
+
     blogService
       .update(id, changedBlog)
       .then(returnedBlog => {
@@ -94,12 +93,12 @@ const App = () => {
 
   const deleteBlog = (id) => {
     const blog = blogs.find(b => b.id === id)
-    
+
     if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
       blogService
         .remove(id)
         .then(() => {
-          setBlogs(blogs.filter(blog => blog.id !== id));
+          setBlogs(blogs.filter(blog => blog.id !== id))
         })
         .catch(error => {
           errorPopup(error.response.data.error)
@@ -141,7 +140,7 @@ const App = () => {
         </div>
       }
       <div>
-        {blogs.sort((a, b) => b.likes - a.likes).map(blog => 
+        {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
           <Blog
             key={blog.id}
             blog={blog}
