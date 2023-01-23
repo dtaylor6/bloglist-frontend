@@ -111,14 +111,13 @@ const App = () => {
           </Togglable>
         </div>
       }
-      <ul>
-        {blogs.map(blog => 
-          <Blog
-            key={blog.id}
-            blog={blog}
-          />
-        )}
-      </ul>
+      {console.log(blogs[blogs.length -1])}
+      {blogs.map(blog => 
+        <Blog
+          key={blog.id}
+          blog={blog}
+        />
+      )}
     </div>
   )
 }
