@@ -147,7 +147,7 @@ const App = () => {
             blog={blog}
             updateBlog={likeBlog}
             removeBlog={deleteBlog}
-            username={user.username}
+            loggedInUser={user && user.username}
           />
         )}
       </div>
