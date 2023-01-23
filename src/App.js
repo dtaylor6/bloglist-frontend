@@ -88,17 +88,24 @@ const App = () => {
         setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
       })
       .catch(error => {
-        setErrorMessage(
-          `Blog '${blog.title}' was already removed from server`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        setBlogs(blogs.filter(b => b.id !== id))
+        errorPopup(error.response.data.error)
       })
   }
 
-  const deleteBlog = (id) => {}
+  const deleteBlog = (id) => {
+    const blog = blogs.find(b => b.id === id)
+    
+    if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
+      blogService
+        .remove(id)
+        .then(() => {
+          setBlogs(blogs.filter(blog => blog.id !== id));
+        })
+        .catch(error => {
+          errorPopup(error.response.data.error)
+        })
+    }
+  }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
