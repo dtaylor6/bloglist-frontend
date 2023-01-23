@@ -78,6 +78,26 @@ const App = () => {
       })
   }
 
+  const likeBlog = (id) => {
+    const blog = blogs.find(b => b.id === id)
+    const changedBlog = {...blog, likes: blog.likes+1}
+    
+    blogService
+      .update(id, changedBlog)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+      })
+      .catch(error => {
+        setErrorMessage(
+          `Blog '${blog.title}' was already removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setBlogs(blogs.filter(b => b.id !== id))
+      })
+  }
+
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
@@ -116,6 +136,7 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
+          updateBlog = {likeBlog}
         />
       )}
     </div>
