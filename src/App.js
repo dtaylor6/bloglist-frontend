@@ -98,6 +98,8 @@ const App = () => {
       })
   }
 
+  const deleteBlog = (id) => {}
+
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
@@ -132,13 +134,15 @@ const App = () => {
         </div>
       }
       <div>
-        {blogs.map(blog => 
+        {blogs.sort((a, b) => b.likes - a.likes).map(blog => 
           <Blog
             key={blog.id}
             blog={blog}
-            updateBlog = {likeBlog}
+            updateBlog={likeBlog}
+            removeBlog={deleteBlog}
+            username={user.username}
           />
-        ).sort((a, b) => a.likes - b.likes)}
+        )}
       </div>
     </div>
   )
