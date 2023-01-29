@@ -26,3 +26,32 @@ test('<Blog> does not render its URL or number of likes by default', async () =>
   expect(div).not.toHaveTextContent('fake.com')
   expect(div).not.toHaveTextContent('10')
 })
+
+test('<Blog> renders its URL and number of likes when is view is clicked', async () => {
+  const blog = {
+    title: 'test123',
+    author: 'John Doe',
+    url: 'fake.com',
+    likes: 10,
+    user: {
+      name: 'Roto Rooter',
+      username: 'leetblogger123'
+    }
+  }
+
+  const mockHandler = jest.fn()
+
+  const { container } = render(<Blog blog={blog} toggleVisibility={mockHandler}/>)
+  const div = container.querySelector('.blog')
+  expect(div).toBeDefined()
+
+  expect(div).toHaveTextContent('test123')
+  expect(div).toHaveTextContent('John Doe')
+
+  const user = userEvent.setup()
+  const button = screen.getByText('view')
+  await user.click(button)
+
+  expect(div).toHaveTextContent('fake.com')
+  expect(div).toHaveTextContent('10')
+})
