@@ -1,3 +1,9 @@
+Cypress.Commands.add('createUser', ({ username, password }) => {
+  cy.request('POST',  `${Cypress.env('BACKEND')}/users`, {
+    username, password
+  })
+})
+
 Cypress.Commands.add('login', ({ username, password }) => {
   cy.request('POST',  `${Cypress.env('BACKEND')}/login`, {
     username, password
@@ -9,11 +15,11 @@ Cypress.Commands.add('login', ({ username, password }) => {
 
 Cypress.Commands.add('createBlog', ({ title, author, url }) => {
   cy.request({
-    url: `${Cypress.env('BACKEND')}/notes`,
+    url: `${Cypress.env('BACKEND')}/blogs`,
     method: 'POST',
     body: { title, author, url },
     headers: {
-      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('loggedNoteappUser')).token}`
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('loggedBlogappUser')).token}`
     }
   })
 
