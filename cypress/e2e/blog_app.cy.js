@@ -28,4 +28,19 @@ describe('Blog app', function() {
       cy.get('.notification').should('have.css', 'color', 'rgb(255, 0, 0)')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'testuser', password: 'password123' })
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new blog').click()
+      cy.get('#title').type('Test Blog')
+      cy.get('#author').type('John Doe')
+      cy.get('#url').type('fake.com')
+      cy.get('#create-button').click()
+      cy.contains('Test Blog John Doe')
+    })
+  })
 })
