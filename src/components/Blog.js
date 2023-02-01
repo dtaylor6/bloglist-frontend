@@ -26,7 +26,7 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedInUser }) => {
     <div style={blogStyle} className='blog'>
       {blog.title} {blog.author}
 
-      <button onClick={toggleVisibility}>{label}</button>
+      <button onClick={toggleVisibility} className='view-button'>{label}</button>
       {visibile && extraInfo}
     </div>
   )
