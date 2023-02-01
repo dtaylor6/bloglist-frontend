@@ -70,6 +70,18 @@ describe('Blog app', function() {
         cy.contains('Fake Blog John Doe').find('.view-button').click()
         cy.contains('Fake Blog John Doe').find('button').contains('remove').should('not.exist')
       })
+
+      it('blogs are ordered according to likes', function() {
+        cy.contains('Real Blog Jane Doe').find('.view-button').click()
+        cy.contains('Real Blog Jane Doe').find('button').contains('like').as('likeButton')
+        cy.get('@likeButton').click()
+        cy.contains('Real Blog Jane Doe').contains('likes 1')
+        cy.get('@likeButton').click()
+        cy.contains('Real Blog Jane Doe').contains('likes 2')
+
+        cy.get('.blog').eq(0).should('contain', 'Real Blog Jane Doe')
+        cy.get('.blog').eq(1).should('contain', 'Fake Blog John Doe')
+      })
     })
   })
 })
