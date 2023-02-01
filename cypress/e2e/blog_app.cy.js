@@ -50,12 +50,25 @@ describe('Blog app', function() {
         cy.createBlog({ title: 'Real Blog', author: 'Jane Doe', url:'cool.com' })
       })
 
-      it.only('A blog can be liked', function() {
+      it('A blog can be liked', function() {
         cy.contains('Fake Blog John Doe').find('.view-button').click()
         cy.contains('Fake Blog John Doe').contains('likes 0')
         cy.contains('Fake Blog John Doe').find('button').contains('like').as('likeButton')
         cy.get('@likeButton').click()
         cy.contains('Fake Blog John Doe').contains('likes 1')
+      })
+
+      it('A blog can be deleted by its user', function() {
+        cy.contains('Fake Blog John Doe').find('.view-button').click()
+        cy.contains('Fake Blog John Doe').find('button').contains('remove').as('removeButton')
+        cy.get('@removeButton').click()
+        cy.contains('Fake Blog John Doe').should('not.exist')
+      })
+
+      it('blog can not be deleted by someone other than user', function() {
+        cy.contains('logout').click()
+        cy.contains('Fake Blog John Doe').find('.view-button').click()
+        cy.contains('Fake Blog John Doe').find('button').contains('remove').should('not.exist')
       })
     })
   })
