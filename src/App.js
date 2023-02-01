@@ -9,6 +9,8 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+let timer
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
@@ -31,6 +33,9 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
+    else {
+      loginFormRef.current.toggleVisibility()
+    }
   }, [])
 
   const errorPopup = (message) => {
@@ -43,7 +48,10 @@ const App = () => {
   const notificationPopup = (message) => {
     console.log(`message popup: ${message}`)
     setNotificationMessage(message)
-    setTimeout(() => {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
       setNotificationMessage(null)
     }, 5000)
   }
@@ -109,18 +117,21 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
-    blogService.setToken(user.token)
+    blogService.setToken(null)
     notificationPopup('logged out')
   }
 
   const blogFormRef = useRef()
+  const loginFormRef = useRef()
 
   return (
     <div>
       <h1>Blogs</h1>
+      <Notification message={errorMessage} isError={true} />
+      <Notification message={notificationMessage} isError={false} />
       {user === null ?
         <div>
-          <Togglable buttonLabel='login'>
+          <Togglable buttonLabel='login' ref={loginFormRef}>
             <LoginForm
               username={username}
               password={password}
@@ -131,8 +142,6 @@ const App = () => {
           </Togglable>
         </div> :
         <div>
-          <Notification message={errorMessage} isError={true} />
-          <Notification message={notificationMessage} isError={false} />
           <p>{user.name} logged-in <button onClick={handleLogout}>logout</button></p>
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <BlogForm createBlog={addBlog} />
